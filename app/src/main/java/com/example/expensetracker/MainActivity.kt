@@ -20,7 +20,7 @@ import com.example.expensetracker.data.repository.ExpenseRepository
 import com.example.expensetracker.ui.ExpenseScreen
 import com.example.expensetracker.ui.ExpenseViewModel
 import com.example.expensetracker.ui.ExpenseViewModelFactory
-import com.example.expensetracker.ui.theme.ExpenseTrackerTheme
+import com.example.themes.ui.theme.ThemesTheme
 
 class MainActivity : ComponentActivity() {
 
@@ -57,7 +57,7 @@ class MainActivity : ComponentActivity() {
         )
 
         setContent {
-            ExpenseTrackerTheme {
+            ThemesTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background

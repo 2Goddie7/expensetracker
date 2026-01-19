@@ -6,11 +6,11 @@ import kotlinx.coroutines.flow.Flow
 
 class ExpenseRepository(private val dao: ExpenseDao) {
 
-    val todoLosGastos: Flow<List<ExpenseEntity>> = dao.obtenerTodos()
+    val todosLosGastos: Flow<List<ExpenseEntity>> = dao.obtenerTodos()
 
     val totalGeneral: Flow<Double?> = dao.totalGeneral()
 
-    fun totalPorCategoria(Categoria: String): Flow<Double?> {
+    fun totalPorCategoria(categoria: String): Flow<Double?> {
         return dao.totalPorCategoria(categoria)
     }
 
