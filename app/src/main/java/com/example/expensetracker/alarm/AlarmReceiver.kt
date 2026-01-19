@@ -6,7 +6,10 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.media.RingtoneManager
 import android.os.Build
+import android.os.VibrationEffect
+import android.os.Vibrator
 import androidx.core.app.NotificationCompat
 import com.example.expensetracker.MainActivity
 import com.example.expensetracker.R
@@ -39,6 +42,14 @@ class AlarmReceiver : BroadcastReceiver() {
             ).apply {
                 description = "Recordatorios diarios de gastos"
                 enableVibration(true)
+                //Aquí se añade el sonido
+
+                setSound(
+                    RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION),
+                    null
+                )
+                // NUEVO: Patrón de vibración personalizado
+                vibrationPattern = longArrayOf(0, 500, 200, 500)
             }
             notificationManager.createNotificationChannel(canal)
         }
@@ -54,6 +65,9 @@ class AlarmReceiver : BroadcastReceiver() {
             PendingIntent.FLAG_IMMUTABLE
         )
 
+        // Configuracion del sonido
+        val notificationSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+
         val notificacion = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle("¿Registraste tus gastos?")
@@ -62,9 +76,32 @@ class AlarmReceiver : BroadcastReceiver() {
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
             .setDefaults(NotificationCompat.DEFAULT_ALL)
+            .setSound(notificationSound) // Sonido
+            .setVibrate(longArrayOf(0, 500, 200, 500)) // Vibración
             .build()
 
         notificationManager.notify(NOTIFICATION_ID, notificacion)
+
+        // Activar vibración adicional para asegurar compatibilidad
+        activarVibracion(context)
+    }
+
+    // activar vibración manualmente
+    private fun activarVibracion(context: Context) {
+        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Para Android 8.0 y superior
+            val vibrationEffect = VibrationEffect.createWaveform(
+                longArrayOf(0, 500, 200, 500), // Patrón: espera, vibra, pausa, vibra
+                -1 // No repetir
+            )
+            vibrator.vibrate(vibrationEffect)
+        } else {
+            // Para versiones anteriores
+            @Suppress("DEPRECATION")
+            vibrator.vibrate(longArrayOf(0, 500, 200, 500), -1)
+        }
     }
 
     companion object {

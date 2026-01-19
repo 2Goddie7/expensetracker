@@ -108,6 +108,13 @@ class ExpenseViewModel(
         }
     }
 
+    // NUEVO: Función para actualizar un gasto existente
+    fun actualizarGasto(gasto: ExpenseEntity) {
+        viewModelScope.launch {
+            repository.actualizar(gasto)
+        }
+    }
+
     /**
      * Elimina un gasto de la base de datos.
      */
